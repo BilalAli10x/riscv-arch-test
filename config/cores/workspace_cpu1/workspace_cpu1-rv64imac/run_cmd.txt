@@ -1,0 +1,1 @@
+run-workspace_cpu1-rv64imac.sh {debug:--trace __TRACEFILE__.fst} --elf
