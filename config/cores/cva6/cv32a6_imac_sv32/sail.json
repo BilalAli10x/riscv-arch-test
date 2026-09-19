@@ -103,7 +103,7 @@
     "vmidlen": 7,
     "pmp": {
       "grain": 0,
-      // UDB yaml uses 0 (no PMPSm in this config). RTL has NrPMPEntries=0 (no PMP in RTL).
+      // UDB yaml uses 0 (no PMPSm in this config). RTL has NrPMPEntries=8 with NAPOT.
       "count": 0,
       "usable_count": 0,
       "tor_supported": false,
