@@ -1,4 +1,4 @@
-## DUT Configuration for OpenHW CVA6 (cv32a65x, cv32a60x)
+## DUT Configuration for OpenHW CVA6 (cv32a65x, cv32a60x, cv64a6_imafdc_sv39)
 
 | Config     | ISA                               | Notes                                          |
 | ---------- | --------------------------------- | ---------------------------------------------- |
@@ -42,6 +42,21 @@ Same flow as CVE2 (`install-cve2.sh` → `export PATH` → `export *_ROOT` → `
 
 Install and run flow matches cv32a65x; use `run-cv32a60x.sh` and `make cv32a60x`.
 
+### ACT config vs CVA6 RTL (`cv64a6_imafdc_sv39_config_pkg.sv`)
+
+| Item | RTL / TB | ACT config |
+| ---- | -------- | ---------- |
+| ISA | RV64IMAFDC + Zba/Zbb/Zbc/Zbs/Zcb/Zicond + Zkn | `cv64a6_imafdc_sv39.yaml` extensions |
+| Privilege | S+U (`RVS=1`, `RVU=1`) | S, U, Sv39, Svnapot, Svbare in yaml/sail |
+| `mtvec` | direct + vectored (`DirectVecOnly=0`) | `MTVEC_MODES: [0,1]`; sail both modes |
+| `mtval` / `stval` | `TvalEn=1` | `MTVAL_WIDTH: 64`, `STVAL_WIDTH: 64`; REPORT_VA true |
+| MSIP | `SoftwareInterruptEn=1` | sail `machine.software: true`; **Sm included** |
+| PMP | 8 NAPOT entries (`NrPMPEntries=8`, `PMPNapotEn=1`) | UDB yaml `NUM_PMP_ENTRIES: 0`; PMPSm excluded |
+| Debug triggers | `Sdtrig=0` | Sdtrig* excluded |
+| Cvxif | `CvxifEn=1` | Not in ACT (coprocessor untested) |
+
+Use `run-cv64a6_imafdc_sv39.sh` and `make cv64a6_imafdc_sv39`.
+
 ### One-time setup
 
 **Later** (runner on upstream `openhwgroup/cva6`):
@@ -81,6 +96,7 @@ export CVA6_ROOT="$(pwd)/cva6/cva6"
 ```bash
 make cv32a65x JOBS=1 EXCLUDE_EXTENSIONS=Sm,PMPSm,ExceptionsSm,ExceptionsZc
 make cv32a60x JOBS=1 EXCLUDE_EXTENSIONS=Sm,PMPSm,ExceptionsSm,ExceptionsZc
+make cv64a6_imafdc_sv39 JOBS=1 EXCLUDE_EXTENSIONS=SdtrigSm,SdtrigS,SdtrigU,Smstateen,PMPSm
 ```
 
 For serial simulation (avoids Verilator OOM), run the sim phase separately:
@@ -88,6 +104,9 @@ For serial simulation (avoids Verilator OOM), run the sim phase separately:
 ```bash
 make CONFIG_FILES=config/cores/cva6/cv32a65x/test_config.yaml JOBS=1 EXCLUDE_EXTENSIONS=Sm,PMPSm,ExceptionsSm,ExceptionsZc
 ./run_tests.py -j 1 "$(cat config/cores/cva6/cv32a65x/run_cmd.txt)" work/cv32a65x/elfs
+
+make CONFIG_FILES=config/cores/cva6/cv64a6_imafdc_sv39/test_config.yaml JOBS=1 EXCLUDE_EXTENSIONS=SdtrigSm,SdtrigS,SdtrigU,Smstateen,PMPSm
+./run_tests.py -j 1 "$(cat config/cores/cva6/cv64a6_imafdc_sv39/run_cmd.txt)" work/cv64a6_imafdc_sv39/elfs
 ```
 
 ### Build ELFs only
