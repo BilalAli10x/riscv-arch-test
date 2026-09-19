@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 # SPDX-License-Identifier: Apache-2.0
-# Install CVA6 Verilator testharness for ACT (cv32a65x, cv32a60x).
+# Install CVA6 Verilator testharness for ACT (cv32a65x, cv32a60x, cv32a6_imac_sv32, cv64a6_imafdc_sv39).
 # Usage: install-cva6.sh <install-dir>
 #   Typical: install-cva6.sh ./cva6
-# Creates: <install-dir>/bin/run-cv32a65x.sh, run-cv32a60x.sh and <install-dir>/cva6/ (source tree).
+# Creates: <install-dir>/bin/run-cv32a65x.sh, run-cv32a60x.sh, run-cv32a6_imac_sv32.sh,
+#   run-cv64a6_imafdc_sv39.sh and <install-dir>/cva6/.
 # Cache key derives from sha256(this file)[:12]; bump CVA6_COMMIT to invalidate.
 #
 # Override fork/commit:
@@ -14,8 +15,8 @@ set -euo pipefail
 
 INSTALL_DIR="${1:?Usage: install-cva6.sh <install-dir>}"
 CVA6_REPO="${CVA6_REPO:-https://github.com/openhwgroup/cva6.git}"
-# Pin: cv32a60x_act4 tip (includes run-cv32a60x.sh). Bump when updating CVA6-side runners or RTL.
-CVA6_COMMIT="${CVA6_COMMIT:-5b24d97}"
+# Pin: cv64a6_imafdc_sv39_act4 tip (includes all ACT runners). Bump when updating CVA6-side runners or RTL.
+CVA6_COMMIT="${CVA6_COMMIT:-2f8d098}"
 CVA6_TREE="${INSTALL_DIR}/cva6"
 
 mkdir -p "${INSTALL_DIR}/bin"
@@ -64,3 +65,13 @@ if [[ ! -f "${CVA6_ROOT}/.github/scripts/run-cv32a60x.sh" ]]; then
 fi
 install -m 0755 "${CVA6_ROOT}/.github/scripts/run-cv32a60x.sh" \
   "${INSTALL_DIR}/bin/run-cv32a60x.sh"
+
+if [[ -f "${CVA6_ROOT}/.github/scripts/run-cv32a6_imac_sv32.sh" ]]; then
+  install -m 0755 "${CVA6_ROOT}/.github/scripts/run-cv32a6_imac_sv32.sh" \
+    "${INSTALL_DIR}/bin/run-cv32a6_imac_sv32.sh"
+fi
+
+if [[ -f "${CVA6_ROOT}/.github/scripts/run-cv64a6_imafdc_sv39.sh" ]]; then
+  install -m 0755 "${CVA6_ROOT}/.github/scripts/run-cv64a6_imafdc_sv39.sh" \
+    "${INSTALL_DIR}/bin/run-cv64a6_imafdc_sv39.sh"
+fi
