@@ -11,6 +11,8 @@
         .balign 8; .global fromhost; fromhost: .dword 0;     \
         .popsection;
 
+#define STANDARD_SM_SUPPORTED
+
 ##### STARTUP #####
 
 # Perform boot operations. Can be empty or left undefined unless needed for

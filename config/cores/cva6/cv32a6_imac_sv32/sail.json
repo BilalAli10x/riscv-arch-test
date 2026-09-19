@@ -7,7 +7,7 @@
     "writable_fiom": true,
     "writable_hpm_counters": {
       "len": 32,
-      "value": "0x0000_0000"
+      "value": "0xFFFF_FFFF"
     },
     "scounteren_writable_bits": {
       "len": 32,
@@ -24,11 +24,11 @@
     "mtvec": {
       "direct": {
         "supported": true,
-        "base_alignment": 8
+        "base_alignment": 4
       },
       "vectored": {
-        "supported": false,
-        "base_alignment": 2
+        "supported": true,
+        "base_alignment": 4
       }
     },
     "stvec": {
@@ -61,25 +61,25 @@
         "value": "0x0000_2222"
       }
     },
-    // mtval is hardwired to 0 in CVA6(cv32a60x) — all REPORT_VA_IN_MTVAL_* = false
+    // mtval/stval report VA/encoding per cv32a6_imac_sv32_config_pkg (TvalEn=1)
     "xtval_nonzero": {
-      "illegal_instruction": false,
+      "illegal_instruction": true,
       "virtual_instruction": false,
       "load_guest_page_fault": false,
       "samo_guest_page_fault": false,
       "fetch_guest_page_fault": false,
-      "software_breakpoint": false,
-      "hardware_breakpoint": false,
-      "load_address_misaligned": false,
-      "load_access_fault": false,
-      "load_page_fault": false,
-      "samo_address_misaligned": false,
-      "samo_access_fault": false,
-      "samo_page_fault": false,
-      "fetch_address_misaligned": false,
-      "fetch_access_fault": false,
-      "fetch_page_fault": false,
-      "software_check": false,
+      "software_breakpoint": true,
+      "hardware_breakpoint": true,
+      "load_address_misaligned": true,
+      "load_access_fault": true,
+      "load_page_fault": true,
+      "samo_address_misaligned": true,
+      "samo_access_fault": true,
+      "samo_page_fault": true,
+      "fetch_address_misaligned": true,
+      "fetch_access_fault": true,
+      "fetch_page_fault": true,
+      "software_check": true,
       "hardware_error": true,
       "reserved_exceptions": false
     },
@@ -98,7 +98,7 @@
     "privileged_isa_version": "Privileged_ISA_1_12"
   },
   "memory": {
-    "physaddr_bits": 32,
+    "physaddr_bits": 34,
     "asidlen": 9,
     "vmidlen": 7,
     "pmp": {
@@ -291,13 +291,13 @@
             "amo": "AlignmentException",
             "lrsc": "AccessFault"
           },
-          "atomic_support": "AMONone",
+          "atomic_support": "AMOArithmetic",
           "misaligned_atomicity_granule_size_exp": 0,
           "vector_misaligned_atomicity_granule_size_exp": 0,
-          "reservability": "RsrvNone",
+          "reservability": "RsrvEventual",
           "supports_cbo_zero": false,
-          "supports_pte_read": false,
-          "supports_pte_write": false
+          "supports_pte_read": true,
+          "supports_pte_write": true
         },
         "include_in_device_tree": true
       }
@@ -316,7 +316,7 @@
     },
     "interrupts": {
       "machine": {
-        "software": { "supported": false },
+        "software": { "supported": true },
         "external": { "supported": true },
         "timer": { "supported": true }
       }
@@ -341,7 +341,7 @@
       "supported": true
     },
     "A": {
-      "supported": false
+      "supported": true
     },
     "F": {
       "supported": false,
@@ -371,7 +371,7 @@
       "supported": false
     },
     "S": {
-      "supported": false,
+      "supported": true,
       "interrupts": {
         "software": { "supported": true },
         "external": { "supported": true },
@@ -379,7 +379,7 @@
       }
     },
     "U": {
-      "supported": false
+      "supported": true
     },
 
     "H": {
@@ -450,7 +450,7 @@
       "supported": false
     },
     "Zicntr": {
-      "supported": false
+      "supported": true
     },
     "Zicsr": {
       "supported": true
@@ -465,7 +465,7 @@
       "supported": false
     },
     "Zihpm": {
-      "supported": false
+      "supported": true
     },
     "Zimop": {
       "supported": false
@@ -474,7 +474,7 @@
       "supported": true
     },
     "Zaamo": {
-      "supported": false
+      "supported": true
     },
     "Zabha": {
       "supported": false
@@ -483,7 +483,7 @@
       "supported": false
     },
     "Zalrsc": {
-      "supported": false
+      "supported": true
     },
     "Zama16b": {
       "supported": false
@@ -525,7 +525,7 @@
       "supported": false
     },
     "Zcb": {
-      "supported": true
+      "supported": false
     },
     "Zcmop": {
       "supported": false
@@ -543,22 +543,22 @@
       "supported": true
     },
     "Zbkb": {
-      "supported": false
+      "supported": true
     },
     "Zbkc": {
-      "supported": false
+      "supported": true
     },
     "Zbkx": {
-      "supported": false
+      "supported": true
     },
     "Zknd": {
-      "supported": false
+      "supported": true
     },
     "Zkne": {
-      "supported": false
+      "supported": true
     },
     "Zknh": {
-      "supported": false
+      "supported": true
     },
     "Zkr": {
       "supported": false,
@@ -642,7 +642,7 @@
     // Enabling Sstvala requires that the exceptions specified in the extension
     // have their appropriate settings under `base.xtval_nonzero`.
     "Sstvala": {
-      "supported": false
+      "supported": true
     },
     "Svade": {
       "supported": false
@@ -678,11 +678,11 @@
       "supported": false
     },
     "Svbare": {
-      "supported": false,
+      "supported": true,
       "sfence_vma_illegal_if_svbare_only": true
     },
     "Sv32": {
-      "supported": false
+      "supported": true
     },
     "Sv39": {
       "supported": false
