@@ -1,0 +1,1 @@
+run-cv64a6_imafdc_sv39.sh {debug:--trace __TRACEFILE__} --elf
