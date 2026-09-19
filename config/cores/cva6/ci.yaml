@@ -3,10 +3,9 @@
 
 ci_enabled: true
 # Tune as failures are triaged (parallel Verilator OOM is a runtime concern, not CI yaml).
-# Sm excluded: RTL SoftwareInterruptEn=0 (no MSIP); matches CVA6 riscv-config msip implemented:false.
-# PMPSm and MEXT Sm subtests require Sm; triage separately when TB enables UART MSIP.
-# ExceptionsSm/ExceptionsZc: Sail ref model trap-loops with CVA6 sail.json (mtval=0, no S/U); excluded until sail tuned.
-exclude_extensions: "Sm,PMPSm,ExceptionsSm,ExceptionsZc"
+# cv32a65x/cv32a60x: Sm excluded (SoftwareInterruptEn=0); ExceptionsSm/ExceptionsZc Sail trap-loops (mtval=0).
+# cv64a6_imafdc_sv39: Sm included (SoftwareInterruptEn=1); Sdtrig* excluded (Sdtrig=0); PMPSm excluded (UDB NUM_PMP_ENTRIES=0).
+exclude_extensions: "Sm,PMPSm,ExceptionsSm,ExceptionsZc,SdtrigSm,SdtrigS,SdtrigU,Smstateen"
 apt_packages: "autoconf flex bison help2man libfl-dev ccache device-tree-compiler"
 install_script: ".github/scripts/install-cva6.sh"
 setup_script: ".github/scripts/setup-cva6.sh"
